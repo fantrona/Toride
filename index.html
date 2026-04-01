@@ -7,43 +7,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0a0a12;
-      --bg-panel: #11111e;
-      --accent: #00ff9d;
-      --accent-dim: rgba(0, 255, 157, 0.3);
-      --scanline: rgba(0, 0, 0, 0.25);
+      --bg: #0a0a12;
+      --card: #11111e;
+      --text: #00ff9d;
+      --text-dim: rgba(0, 255, 157, 0.5);
+      --border: #00ff9d;
+      --scan: rgba(0, 0, 0, 0.2);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--bg-dark);
+      background: var(--bg);
       font-family: 'Press Start 2P', cursive;
-      color: var(--accent);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
       image-rendering: pixelated;
-      position: relative;
+      line-height: 1.6;
     }
 
-    /* CRT Scanlines */
+    /* CRT scanlines */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(
-        0deg,
+        to bottom,
         transparent,
         transparent 1px,
-        var(--scanline) 1px,
-        var(--scanline) 2px
+        var(--scan) 1px,
+        var(--scan) 2px
       );
       pointer-events: none;
       z-index: 100;
-      animation: scan 10s linear infinite;
+      animation: scan 12s linear infinite;
     }
 
     @keyframes scan {
@@ -51,113 +52,175 @@
       100% { background-position: 0 100vh; }
     }
 
-    .card {
-      background: var(--bg-panel);
-      border: 3px solid var(--accent);
-      border-radius: 4px;
+    .page {
+      background: var(--card);
+      border: 3px solid var(--border);
       padding: 30px 25px;
-      max-width: 400px;
+      max-width: 480px;
       width: 100%;
       position: relative;
       z-index: 10;
-      box-shadow: 0 0 15px var(--accent-dim);
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.15);
     }
 
+    /* Avatar */
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 140px;
+      height: 140px;
+      border: 3px solid var(--border);
+      image-rendering: pixelated;
+      object-fit: cover;
+      background: #000;
+    }
+
+    /* Name */
     .name {
       text-align: center;
-      font-size: 1.1rem;
-      margin-bottom: 25px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid var(--accent-dim);
+      font-size: 1rem;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--text-dim);
       letter-spacing: 1px;
     }
 
-    .links {
+    /* About section */
+    .about {
+      font-size: 0.6rem;
+      color: var(--text);
+      opacity: 0.95;
+      margin-bottom: 25px;
+      text-align: justify;
+    }
+
+    .about p {
+      margin-bottom: 12px;
+    }
+
+    /* Contacts */
+    .contacts-title {
+      font-size: 0.65rem;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--text-dim);
+      opacity: 0.9;
+    }
+
+    .contact-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      margin-bottom: 25px;
     }
 
-    .link {
+    .contact {
       display: block;
-      padding: 12px 16px;
+      padding: 10px 14px;
       background: #1a1a2e;
-      border: 2px solid var(--accent);
-      color: var(--accent);
+      border: 2px solid var(--border);
+      color: var(--text);
       text-decoration: none;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       text-align: center;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       transition: all 0.1s steps(2);
-      image-rendering: pixelated;
+      word-break: break-all;
     }
 
-    .link:hover {
-      background: var(--accent);
-      color: var(--bg-dark);
+    .contact:hover {
+      background: var(--border);
+      color: var(--bg);
       transform: translate(2px, 2px);
-      box-shadow: -3px -3px 0 rgba(0,255,157,0.5);
     }
 
-    .link:active {
+    .contact:active {
       transform: translate(4px, 4px);
       box-shadow: none;
     }
 
-    /* Platform accent borders */
-    .link:nth-child(1) { border-color: #0088cc; }
-    .link:nth-child(1):hover { background: #0088cc; color: #fff; }
-
-    .link:nth-child(2) { border-color: #1b2838; }
-    .link:nth-child(2):hover { background: #66c0f4; color: #1b2838; }
-
-    .link:nth-child(3) { border-color: #ff0000; }
-    .link:nth-child(3):hover { background: #ff0000; color: #fff; }
-
-    .link:nth-child(4) { border-color: #0077ff; }
-    .link:nth-child(4):hover { background: #0077ff; color: #fff; }
-
-    .copyright {
+    /* Footer */
+    .footer {
       text-align: center;
       font-size: 0.5rem;
-      color: var(--accent-dim);
-      margin-top: 25px;
+      color: var(--text-dim);
       padding-top: 15px;
-      border-top: 1px solid var(--accent-dim);
+      border-top: 1px solid var(--text-dim);
+    }
+
+    /* Subtle flicker */
+    @media (prefers-reduced-motion: no-preference) {
+      .page {
+        animation: flicker 0.2s infinite;
+      }
+      @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        95% { opacity: 0.98; }
+        97% { opacity: 1; }
+      }
     }
 
     @media (max-width: 420px) {
-      .card { padding: 25px 20px; }
-      .name { font-size: 0.95rem; }
-      .link { font-size: 0.6rem; padding: 10px 14px; }
+      .page { padding: 25px 20px; }
+      .avatar { width: 120px; height: 120px; }
+      .name { font-size: 0.9rem; }
+      .about { font-size: 0.55rem; }
+      .contact { font-size: 0.55rem; padding: 9px 12px; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="name">TORIDE SHI</div>
+  <div class="page">
     
-    <div class="links">
-      <a href="https://www.t.me/TorideShi" target="_blank" class="link">Telegram</a>
-      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="link">Steam</a>
-      <a href="https://www.youtube.com/@Toride-shi" target="_blank" class="link">YouTube</a>
-      <a href="https://vk.com/toridevk" target="_blank" class="link">VK</a>
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <img 
+        src="https://media.discordapp.net/attachments/1168576216006131712/1489030892826656940/image.png?ex=69ceef95&is=69cd9e15&hm=c5171f18fcae86cccd4a845ef992282a0a414bc9068d9eeab22697dbd1ce5867&=&format=webp&quality=lossless&width=554&height=611" 
+        alt="Avatar" 
+        class="avatar"
+      />
     </div>
 
-    <div class="copyright">© 2026</div>
+    <!-- Name -->
+    <div class="name">TORIDE SHI</div>
+
+    <!-- About -->
+    <div class="about">
+      <p>Привет. Я занимаюсь творчеством, дизайном и ретро-эстетикой.</p>
+      <p>Здесь можно найти мои проекты, мысли и способы связаться.</p>
+      <p>Ценю минимализм, пиксель-арт и честность.</p>
+    </div>
+
+    <!-- Contacts -->
+    <div class="contacts-title">✦ СВЯЗЬ ✦</div>
+    <div class="contact-list">
+      <a href="https://t.me/Toride_pochtovoye_otdeleniye" target="_blank" class="contact">
+        @Toride_pochtovoye_otdeleniye
+      </a>
+      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="contact">
+        Steam Profile
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">© 2026 • TORIDE SHI</div>
   </div>
 
   <script>
-    // Subtle CRT flicker
+    // Очень лёгкое мерцание для атмосферы
     document.addEventListener('DOMContentLoaded', () => {
-      const card = document.querySelector('.card');
+      const page = document.querySelector('.page');
       setInterval(() => {
-        if (Math.random() > 0.97) {
-          card.style.opacity = 0.96;
-          setTimeout(() => card.style.opacity = 1, 40);
+        if (Math.random() > 0.98) {
+          page.style.opacity = 0.97;
+          setTimeout(() => page.style.opacity = 1, 30);
         }
-      }, 150);
+      }, 200);
     });
   </script>
 </body>

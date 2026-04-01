@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Взрывающаяся кнопка</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .explode-btn {
+            padding: 20px 50px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 65, 108, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .explode-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 65, 108, 0.6);
+        }
+
+        .explode-btn:active {
+            transform: scale(0.95);
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0);
+            }
+        }
+
+        .shockwave {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 65, 108, 0.8);
+            animation: shockwave 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes shockwave {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                opacity: 0;
+            }
+        }
+
+        .reset-btn {
+            position: fixed;
+            bottom: 30px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="explode-btn" onclick="explode(event)">💥 НАЖМИ МЕНЯ 💥</button>
+    <button class="reset-btn" onclick="reset()">Восстановить кнопку</button>
+
+    <script>
+        function explode(event) {
+            const btn = event.target;
+            const rect = btn.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Скрываем кнопку
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+
+            // Создаем частицы
+            for (let i = 0; i < 50; i++) {
+                createParticle(centerX, centerY);
+            }
+
+            // Создаем ударную волну
+            createShockwave(centerX, centerY);
+
+            // Показываем кнопку восстановления
+            setTimeout(() => {
+                document.querySelector('.reset-btn').style.display = 'block';
+            }, 500);
+        }
+
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 20 + 10;
+            const colors = ['#ff416c', '#ff4b2b', '#ffa500', '#ffff00', '#ff6b6b'];
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 200 + 100;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            
+            particle.style.setProperty('--tx', tx + 'px');
+            particle.style.setProperty('--ty', ty + 'px');
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function createShockwave(x, y) {
+            const shockwave = document.createElement('div');
+            shockwave.className = 'shockwave';
+            shockwave.style.left = x + 'px';
+            shockwave.style.top = y + 'px';
+            shockwave.style.transform = 'translate(-50%, -50%)';
+            
+            document.body.appendChild(shockwave);
+            
+            setTimeout(() => shockwave.remove(), 800);
+        }
+
+        function reset() {
+            const btn = document.querySelector('.explode-btn');
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            document.querySelector('.reset-btn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

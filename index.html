@@ -1,171 +1,302 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Взрывающаяся кнопка</title>
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toride Shi ✦ Retro Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0a12;
+      --bg-panel: #1a1a2e;
+      --pixel-green: #00ff9d;
+      --pixel-pink: #ff00aa;
+      --pixel-blue: #00d4ff;
+      --pixel-yellow: #ffea00;
+      --crt-scanline: rgba(18, 16, 25, 0.25);
+    }
 
-        .explode-btn {
-            padding: 20px 50px;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255, 65, 108, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 10;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .explode-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(255, 65, 108, 0.6);
-        }
+    body {
+      background: var(--bg-dark);
+      font-family: 'Press Start 2P', cursive;
+      color: var(--pixel-green);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      image-rendering: pixelated;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-        .explode-btn:active {
-            transform: scale(0.95);
-        }
+    /* CRT Scanline Effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 1px,
+        var(--crt-scanline) 1px,
+        var(--crt-scanline) 2px
+      );
+      pointer-events: none;
+      z-index: 1000;
+      animation: scanline 8s linear infinite;
+    }
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: explode 1s ease-out forwards;
-        }
+    @keyframes scanline {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100vh; }
+    }
 
-        @keyframes explode {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--tx), var(--ty)) scale(0);
-            }
-        }
+    /* Screen Flicker */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 0.95; }
+      94% { opacity: 1; }
+      96% { opacity: 0.98; }
+    }
 
-        .shockwave {
-            position: absolute;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 65, 108, 0.8);
-            animation: shockwave 0.8s ease-out forwards;
-            pointer-events: none;
-        }
+    .crt-screen {
+      animation: flicker 0.15s infinite;
+      border: 4px solid var(--pixel-blue);
+      border-radius: 12px;
+      box-shadow: 
+        0 0 20px var(--pixel-blue),
+        inset 0 0 40px rgba(0, 212, 255, 0.2);
+      background: var(--bg-panel);
+      padding: 30px;
+      max-width: 520px;
+      width: 100%;
+      position: relative;
+      z-index: 10;
+    }
 
-        @keyframes shockwave {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-            }
-            100% {
-                width: 500px;
-                height: 500px;
-                opacity: 0;
-            }
-        }
+    /* Pixel Border */
+    .crt-screen::after {
+      content: "";
+      position: absolute;
+      top: -8px; left: -8px;
+      right: -8px; bottom: -8px;
+      border: 4px solid transparent;
+      border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="0" y="0" width="4" height="4" fill="%23ff00aa"/><rect x="6" y="0" width="4" height="4" fill="%2300ff9d"/><rect x="12" y="0" width="4" height="4" fill="%23ffea00"/><rect x="0" y="6" width="4" height="4" fill="%2300d4ff"/><rect x="12" y="6" width="4" height="4" fill="%23ff00aa"/><rect x="0" y="12" width="4" height="4" fill="%23ffea00"/><rect x="6" y="12" width="4" height="4" fill="%2300ff9d"/><rect x="12" y="12" width="4" height="4" fill="%2300d4ff"/></svg>') 4 repeat;
+      border-radius: 16px;
+      pointer-events: none;
+    }
 
-        .reset-btn {
-            position: fixed;
-            bottom: 30px;
-            padding: 15px 30px;
-            font-size: 18px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            display: none;
-        }
-    </style>
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 3px dashed var(--pixel-pink);
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      color: var(--pixel-yellow);
+      text-shadow: 3px 3px 0 var(--pixel-pink), -2px -2px 0 var(--pixel-blue);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 3px 3px 0 var(--pixel-pink), -2px -2px 0 var(--pixel-blue); }
+      to { text-shadow: 3px 3px 0 var(--pixel-blue), -2px -2px 0 var(--pixel-pink); }
+    }
+
+    .subtitle {
+      font-size: 0.65rem;
+      color: var(--pixel-blue);
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .retro-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, #2a2a4a, #1a1a3a);
+      border: 3px solid var(--pixel-green);
+      border-radius: 8px;
+      color: var(--pixel-green);
+      text-decoration: none;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.15s steps(2);
+      image-rendering: pixelated;
+    }
+
+    .retro-btn::before {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,157,0.2), transparent);
+      transition: left 0.3s;
+    }
+
+    .retro-btn:hover::before {
+      left: 100%;
+    }
+
+    .retro-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 
+        -4px -4px 0 var(--pixel-blue),
+        4px 4px 0 var(--pixel-pink);
+      border-color: var(--pixel-yellow);
+      color: var(--pixel-yellow);
+    }
+
+    .retro-btn:active {
+      transform: translate(4px, 4px);
+      box-shadow: none;
+    }
+
+    .btn-icon {
+      font-size: 1.1rem;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* Platform Colors */
+    .btn-telegram { border-color: #0088cc; }
+    .btn-telegram:hover { 
+      border-color: #00ccff; 
+      color: #00ccff;
+      box-shadow: -4px -4px 0 #0088cc, 4px 4px 0 #00ccff;
+    }
+
+    .btn-steam { border-color: #1b2838; }
+    .btn-steam:hover { 
+      border-color: #66c0f4; 
+      color: #66c0f4;
+      box-shadow: -4px -4px 0 #1b2838, 4px 4px 0 #66c0f4;
+    }
+
+    .btn-youtube { border-color: #ff0000; }
+    .btn-youtube:hover { 
+      border-color: #ff4444; 
+      color: #ff4444;
+      box-shadow: -4px -4px 0 #cc0000, 4px 4px 0 #ff4444;
+    }
+
+    .btn-vk { border-color: #0077ff; }
+    .btn-vk:hover { 
+      border-color: #4da6ff; 
+      color: #4da6ff;
+      box-shadow: -4px -4px 0 #0055cc, 4px 4px 0 #4da6ff;
+    }
+
+    .footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 0.55rem;
+      color: var(--pixel-blue);
+      opacity: 0.8;
+      padding-top: 15px;
+      border-top: 2px dashed var(--pixel-green);
+    }
+
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Pixel Decorations */
+    .pixel-corner {
+      position: absolute;
+      width: 20px; height: 20px;
+      border: 3px solid var(--pixel-yellow);
+    }
+    .pixel-corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+    .pixel-corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+    .pixel-corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+    .pixel-corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .crt-screen {
+        padding: 20px;
+        border-width: 3px;
+      }
+      .logo { font-size: 1.1rem; }
+      .retro-btn { font-size: 0.65rem; padding: 12px 16px; }
+    }
+  </style>
 </head>
 <body>
-    <button class="explode-btn" onclick="explode(event)">💥 НАЖМИ МЕНЯ 💥</button>
-    <button class="reset-btn" onclick="reset()">Восстановить кнопку</button>
+  <div class="crt-screen">
+    <div class="pixel-corner tl"></div>
+    <div class="pixel-corner tr"></div>
+    <div class="pixel-corner bl"></div>
+    <div class="pixel-corner br"></div>
 
-    <script>
-        function explode(event) {
-            const btn = event.target;
-            const rect = btn.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+    <div class="header">
+      <div class="logo">✦ TORIDE SHI ✦</div>
+      <div class="subtitle">
+        GAME DESIGNER <span class="blink">_</span><br>
+        PIXEL ARTIST <span class="blink">_</span><br>
+        RETRO ENTHUSIAST
+      </div>
+    </div>
 
-            // Скрываем кнопку
-            btn.style.opacity = '0';
-            btn.style.pointerEvents = 'none';
+    <div class="buttons">
+      <a href="https://www.t.me/TorideShi" target="_blank" class="retro-btn btn-telegram">
+        <span class="btn-icon">✈</span> TELEGRAM
+      </a>
+      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="retro-btn btn-steam">
+        <span class="btn-icon">🎮</span> STEAM
+      </a>
+      <a href="https://www.youtube.com/@Toride-shi" target="_blank" class="retro-btn btn-youtube">
+        <span class="btn-icon">▶</span> YOUTUBE
+      </a>
+      <a href="https://vk.com/toridevk" target="_blank" class="retro-btn btn-vk">
+        <span class="btn-icon">💬</span> VKONTAKTE
+      </a>
+    </div>
 
-            // Создаем частицы
-            for (let i = 0; i < 50; i++) {
-                createParticle(centerX, centerY);
-            }
+    <div class="footer">
+      © 2026 TORIDE SHI<br>
+      PRESS START TO CONNECT <span class="blink">▮</span>
+    </div>
+  </div>
 
-            // Создаем ударную волну
-            createShockwave(centerX, centerY);
-
-            // Показываем кнопку восстановления
-            setTimeout(() => {
-                document.querySelector('.reset-btn').style.display = 'block';
-            }, 500);
+  <script>
+    // Add subtle CRT flicker variation
+    document.addEventListener('DOMContentLoaded', () => {
+      const screen = document.querySelector('.crt-screen');
+      setInterval(() => {
+        if (Math.random() > 0.95) {
+          screen.style.opacity = 0.97;
+          setTimeout(() => screen.style.opacity = 1, 50);
         }
-
-        function createParticle(x, y) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            
-            const size = Math.random() * 20 + 10;
-            const colors = ['#ff416c', '#ff4b2b', '#ffa500', '#ffff00', '#ff6b6b'];
-            
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-            particle.style.left = x + 'px';
-            particle.style.top = y + 'px';
-            
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 200 + 100;
-            const tx = Math.cos(angle) * distance;
-            const ty = Math.sin(angle) * distance;
-            
-            particle.style.setProperty('--tx', tx + 'px');
-            particle.style.setProperty('--ty', ty + 'px');
-            
-            document.body.appendChild(particle);
-            
-            setTimeout(() => particle.remove(), 1000);
-        }
-
-        function createShockwave(x, y) {
-            const shockwave = document.createElement('div');
-            shockwave.className = 'shockwave';
-            shockwave.style.left = x + 'px';
-            shockwave.style.top = y + 'px';
-            shockwave.style.transform = 'translate(-50%, -50%)';
-            
-            document.body.appendChild(shockwave);
-            
-            setTimeout(() => shockwave.remove(), 800);
-        }
-
-        function reset() {
-            const btn = document.querySelector('.explode-btn');
-            btn.style.opacity = '1';
-            btn.style.pointerEvents = 'auto';
-            document.querySelector('.reset-btn').style.display = 'none';
-        }
-    </script>
+      }, 200);
+    });
+  </script>
 </body>
 </html>

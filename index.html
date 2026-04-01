@@ -10,9 +10,9 @@
       --bg: #0a0a12;
       --card: #11111e;
       --text: #00ff9d;
-      --text-dim: rgba(0, 255, 157, 0.5);
+      --text-dim: rgba(0, 255, 157, 0.4);
       --border: #00ff9d;
-      --scan: rgba(0, 0, 0, 0.2);
+      --scan: rgba(0, 0, 0, 0.18);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,7 +27,7 @@
       align-items: center;
       padding: 20px;
       image-rendering: pixelated;
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     /* CRT scanlines */
@@ -56,23 +56,23 @@
       background: var(--card);
       border: 3px solid var(--border);
       padding: 30px 25px;
-      max-width: 480px;
+      max-width: 460px;
       width: 100%;
       position: relative;
       z-index: 10;
-      box-shadow: 0 0 20px rgba(0, 255, 157, 0.15);
+      box-shadow: 0 0 20px rgba(0, 255, 157, 0.12);
     }
 
     /* Avatar */
     .avatar-wrap {
       display: flex;
       justify-content: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .avatar {
-      width: 140px;
-      height: 140px;
+      width: 130px;
+      height: 130px;
       border: 3px solid var(--border);
       image-rendering: pixelated;
       object-fit: cover;
@@ -82,45 +82,34 @@
     /* Name */
     .name {
       text-align: center;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      padding-bottom: 18px;
+      font-size: 0.95rem;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
       border-bottom: 2px solid var(--text-dim);
       letter-spacing: 1px;
     }
 
-    /* About section */
-    .about {
-      font-size: 0.6rem;
+    /* Placeholder description */
+    .desc {
+      font-size: 0.55rem;
       color: var(--text);
-      opacity: 0.95;
-      margin-bottom: 25px;
-      text-align: justify;
+      opacity: 0.85;
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.7;
     }
 
-    .about p {
-      margin-bottom: 12px;
-    }
-
-    /* Contacts */
-    .contacts-title {
-      font-size: 0.65rem;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--text-dim);
-      opacity: 0.9;
-    }
-
-    .contact-list {
+    /* Links */
+    .links {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 25px;
+      gap: 11px;
+      margin-bottom: 22px;
     }
 
-    .contact {
+    .link {
       display: block;
-      padding: 10px 14px;
+      padding: 11px 14px;
       background: #1a1a2e;
       border: 2px solid var(--border);
       color: var(--text);
@@ -130,47 +119,52 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: all 0.1s steps(2);
-      word-break: break-all;
     }
 
-    .contact:hover {
+    .link:hover {
       background: var(--border);
       color: var(--bg);
       transform: translate(2px, 2px);
     }
 
-    .contact:active {
+    .link:active {
       transform: translate(4px, 4px);
       box-shadow: none;
     }
+
+    /* Platform accent colors on hover */
+    .link:nth-child(1):hover { background: #0088cc; }
+    .link:nth-child(2):hover { background: #66c0f4; }
+    .link:nth-child(3):hover { background: #ff0000; }
+    .link:nth-child(4):hover { background: #0077ff; }
 
     /* Footer */
     .footer {
       text-align: center;
       font-size: 0.5rem;
       color: var(--text-dim);
-      padding-top: 15px;
+      padding-top: 14px;
       border-top: 1px solid var(--text-dim);
     }
 
-    /* Subtle flicker */
+    /* Subtle flicker (reduced motion safe) */
     @media (prefers-reduced-motion: no-preference) {
       .page {
-        animation: flicker 0.2s infinite;
+        animation: flicker 0.25s infinite;
       }
       @keyframes flicker {
         0%, 100% { opacity: 1; }
-        95% { opacity: 0.98; }
-        97% { opacity: 1; }
+        96% { opacity: 0.97; }
+        98% { opacity: 1; }
       }
     }
 
     @media (max-width: 420px) {
       .page { padding: 25px 20px; }
-      .avatar { width: 120px; height: 120px; }
-      .name { font-size: 0.9rem; }
-      .about { font-size: 0.55rem; }
-      .contact { font-size: 0.55rem; padding: 9px 12px; }
+      .avatar { width: 115px; height: 115px; }
+      .name { font-size: 0.85rem; }
+      .desc { font-size: 0.5rem; }
+      .link { font-size: 0.55rem; padding: 10px 12px; }
     }
   </style>
 </head>
@@ -189,39 +183,22 @@
     <!-- Name -->
     <div class="name">TORIDE SHI</div>
 
-    <!-- About -->
-    <div class="about">
-      <p>Привет. Я занимаюсь творчеством, дизайном и ретро-эстетикой.</p>
-      <p>Здесь можно найти мои проекты, мысли и способы связаться.</p>
-      <p>Ценю минимализм, пиксель-арт и честность.</p>
+    <!-- Simple placeholder text -->
+    <div class="desc">
+      Что вроде личного всякого,<br>
+      а снизу всякое важное возможно.
     </div>
 
-    <!-- Contacts -->
-    <div class="contacts-title">✦ СВЯЗЬ ✦</div>
-    <div class="contact-list">
-      <a href="https://t.me/Toride_pochtovoye_otdeleniye" target="_blank" class="contact">
-        @Toride_pochtovoye_otdeleniye
-      </a>
-      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="contact">
-        Steam Profile
-      </a>
+    <!-- Links -->
+    <div class="links">
+      <a href="https://www.t.me/TorideShi" target="_blank" class="link">Telegram</a>
+      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="link">Steam</a>
+      <a href="https://www.youtube.com/@Toride-shi" target="_blank" class="link">YouTube</a>
+      <a href="https://vk.com/toridevk" target="_blank" class="link">VK</a>
     </div>
 
     <!-- Footer -->
-    <div class="footer">© 2026 • TORIDE SHI</div>
+    <div class="footer">© 2026</div>
   </div>
-
-  <script>
-    // Очень лёгкое мерцание для атмосферы
-    document.addEventListener('DOMContentLoaded', () => {
-      const page = document.querySelector('.page');
-      setInterval(() => {
-        if (Math.random() > 0.98) {
-          page.style.opacity = 0.97;
-          setTimeout(() => page.style.opacity = 1, 30);
-        }
-      }, 200);
-    });
-  </script>
 </body>
 </html>

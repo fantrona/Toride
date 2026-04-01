@@ -3,29 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Toride Shi ✦ Retro Card</title>
+  <title>Toride Shi</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-dark: #0a0a12;
-      --bg-panel: #1a1a2e;
-      --pixel-green: #00ff9d;
-      --pixel-pink: #ff00aa;
-      --pixel-blue: #00d4ff;
-      --pixel-yellow: #ffea00;
-      --crt-scanline: rgba(18, 16, 25, 0.25);
+      --bg-panel: #11111e;
+      --accent: #00ff9d;
+      --accent-dim: rgba(0, 255, 157, 0.3);
+      --scanline: rgba(0, 0, 0, 0.25);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg-dark);
       font-family: 'Press Start 2P', cursive;
-      color: var(--pixel-green);
+      color: var(--accent);
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -33,269 +27,137 @@
       padding: 20px;
       image-rendering: pixelated;
       position: relative;
-      overflow-x: hidden;
     }
 
-    /* CRT Scanline Effect */
+    /* CRT Scanlines */
     body::before {
       content: "";
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       background: repeating-linear-gradient(
         0deg,
         transparent,
         transparent 1px,
-        var(--crt-scanline) 1px,
-        var(--crt-scanline) 2px
+        var(--scanline) 1px,
+        var(--scanline) 2px
       );
       pointer-events: none;
-      z-index: 1000;
-      animation: scanline 8s linear infinite;
+      z-index: 100;
+      animation: scan 10s linear infinite;
     }
 
-    @keyframes scanline {
+    @keyframes scan {
       0% { background-position: 0 0; }
       100% { background-position: 0 100vh; }
     }
 
-    /* Screen Flicker */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      92% { opacity: 0.95; }
-      94% { opacity: 1; }
-      96% { opacity: 0.98; }
-    }
-
-    .crt-screen {
-      animation: flicker 0.15s infinite;
-      border: 4px solid var(--pixel-blue);
-      border-radius: 12px;
-      box-shadow: 
-        0 0 20px var(--pixel-blue),
-        inset 0 0 40px rgba(0, 212, 255, 0.2);
+    .card {
       background: var(--bg-panel);
-      padding: 30px;
-      max-width: 520px;
+      border: 3px solid var(--accent);
+      border-radius: 4px;
+      padding: 30px 25px;
+      max-width: 400px;
       width: 100%;
       position: relative;
       z-index: 10;
+      box-shadow: 0 0 15px var(--accent-dim);
     }
 
-    /* Pixel Border */
-    .crt-screen::after {
-      content: "";
-      position: absolute;
-      top: -8px; left: -8px;
-      right: -8px; bottom: -8px;
-      border: 4px solid transparent;
-      border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="0" y="0" width="4" height="4" fill="%23ff00aa"/><rect x="6" y="0" width="4" height="4" fill="%2300ff9d"/><rect x="12" y="0" width="4" height="4" fill="%23ffea00"/><rect x="0" y="6" width="4" height="4" fill="%2300d4ff"/><rect x="12" y="6" width="4" height="4" fill="%23ff00aa"/><rect x="0" y="12" width="4" height="4" fill="%23ffea00"/><rect x="6" y="12" width="4" height="4" fill="%2300ff9d"/><rect x="12" y="12" width="4" height="4" fill="%2300d4ff"/></svg>') 4 repeat;
-      border-radius: 16px;
-      pointer-events: none;
-    }
-
-    .header {
+    .name {
       text-align: center;
+      font-size: 1.1rem;
       margin-bottom: 25px;
       padding-bottom: 20px;
-      border-bottom: 3px dashed var(--pixel-pink);
+      border-bottom: 2px solid var(--accent-dim);
+      letter-spacing: 1px;
     }
 
-    .logo {
-      font-size: 1.4rem;
-      color: var(--pixel-yellow);
-      text-shadow: 3px 3px 0 var(--pixel-pink), -2px -2px 0 var(--pixel-blue);
-      margin-bottom: 10px;
-      letter-spacing: 2px;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 3px 3px 0 var(--pixel-pink), -2px -2px 0 var(--pixel-blue); }
-      to { text-shadow: 3px 3px 0 var(--pixel-blue), -2px -2px 0 var(--pixel-pink); }
-    }
-
-    .subtitle {
-      font-size: 0.65rem;
-      color: var(--pixel-blue);
-      opacity: 0.9;
-      line-height: 1.6;
-    }
-
-    .buttons {
+    .links {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
-    .retro-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 18px;
-      background: linear-gradient(135deg, #2a2a4a, #1a1a3a);
-      border: 3px solid var(--pixel-green);
-      border-radius: 8px;
-      color: var(--pixel-green);
+    .link {
+      display: block;
+      padding: 12px 16px;
+      background: #1a1a2e;
+      border: 2px solid var(--accent);
+      color: var(--accent);
       text-decoration: none;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
+      text-align: center;
       text-transform: uppercase;
       letter-spacing: 1px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.15s steps(2);
+      transition: all 0.1s steps(2);
       image-rendering: pixelated;
     }
 
-    .retro-btn::before {
-      content: "";
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,255,157,0.2), transparent);
-      transition: left 0.3s;
-    }
-
-    .retro-btn:hover::before {
-      left: 100%;
-    }
-
-    .retro-btn:hover {
+    .link:hover {
+      background: var(--accent);
+      color: var(--bg-dark);
       transform: translate(2px, 2px);
-      box-shadow: 
-        -4px -4px 0 var(--pixel-blue),
-        4px 4px 0 var(--pixel-pink);
-      border-color: var(--pixel-yellow);
-      color: var(--pixel-yellow);
+      box-shadow: -3px -3px 0 rgba(0,255,157,0.5);
     }
 
-    .retro-btn:active {
+    .link:active {
       transform: translate(4px, 4px);
       box-shadow: none;
     }
 
-    .btn-icon {
-      font-size: 1.1rem;
-      min-width: 24px;
+    /* Platform accent borders */
+    .link:nth-child(1) { border-color: #0088cc; }
+    .link:nth-child(1):hover { background: #0088cc; color: #fff; }
+
+    .link:nth-child(2) { border-color: #1b2838; }
+    .link:nth-child(2):hover { background: #66c0f4; color: #1b2838; }
+
+    .link:nth-child(3) { border-color: #ff0000; }
+    .link:nth-child(3):hover { background: #ff0000; color: #fff; }
+
+    .link:nth-child(4) { border-color: #0077ff; }
+    .link:nth-child(4):hover { background: #0077ff; color: #fff; }
+
+    .copyright {
       text-align: center;
-    }
-
-    /* Platform Colors */
-    .btn-telegram { border-color: #0088cc; }
-    .btn-telegram:hover { 
-      border-color: #00ccff; 
-      color: #00ccff;
-      box-shadow: -4px -4px 0 #0088cc, 4px 4px 0 #00ccff;
-    }
-
-    .btn-steam { border-color: #1b2838; }
-    .btn-steam:hover { 
-      border-color: #66c0f4; 
-      color: #66c0f4;
-      box-shadow: -4px -4px 0 #1b2838, 4px 4px 0 #66c0f4;
-    }
-
-    .btn-youtube { border-color: #ff0000; }
-    .btn-youtube:hover { 
-      border-color: #ff4444; 
-      color: #ff4444;
-      box-shadow: -4px -4px 0 #cc0000, 4px 4px 0 #ff4444;
-    }
-
-    .btn-vk { border-color: #0077ff; }
-    .btn-vk:hover { 
-      border-color: #4da6ff; 
-      color: #4da6ff;
-      box-shadow: -4px -4px 0 #0055cc, 4px 4px 0 #4da6ff;
-    }
-
-    .footer {
+      font-size: 0.5rem;
+      color: var(--accent-dim);
       margin-top: 25px;
-      text-align: center;
-      font-size: 0.55rem;
-      color: var(--pixel-blue);
-      opacity: 0.8;
       padding-top: 15px;
-      border-top: 2px dashed var(--pixel-green);
+      border-top: 1px solid var(--accent-dim);
     }
 
-    .blink {
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-
-    /* Pixel Decorations */
-    .pixel-corner {
-      position: absolute;
-      width: 20px; height: 20px;
-      border: 3px solid var(--pixel-yellow);
-    }
-    .pixel-corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-    .pixel-corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-    .pixel-corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-    .pixel-corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .crt-screen {
-        padding: 20px;
-        border-width: 3px;
-      }
-      .logo { font-size: 1.1rem; }
-      .retro-btn { font-size: 0.65rem; padding: 12px 16px; }
+    @media (max-width: 420px) {
+      .card { padding: 25px 20px; }
+      .name { font-size: 0.95rem; }
+      .link { font-size: 0.6rem; padding: 10px 14px; }
     }
   </style>
 </head>
 <body>
-  <div class="crt-screen">
-    <div class="pixel-corner tl"></div>
-    <div class="pixel-corner tr"></div>
-    <div class="pixel-corner bl"></div>
-    <div class="pixel-corner br"></div>
-
-    <div class="header">
-      <div class="logo">✦ TORIDE SHI ✦</div>
-      <div class="subtitle">
-        GAME DESIGNER <span class="blink">_</span><br>
-        PIXEL ARTIST <span class="blink">_</span><br>
-        RETRO ENTHUSIAST
-      </div>
+  <div class="card">
+    <div class="name">TORIDE SHI</div>
+    
+    <div class="links">
+      <a href="https://www.t.me/TorideShi" target="_blank" class="link">Telegram</a>
+      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="link">Steam</a>
+      <a href="https://www.youtube.com/@Toride-shi" target="_blank" class="link">YouTube</a>
+      <a href="https://vk.com/toridevk" target="_blank" class="link">VK</a>
     </div>
 
-    <div class="buttons">
-      <a href="https://www.t.me/TorideShi" target="_blank" class="retro-btn btn-telegram">
-        <span class="btn-icon">✈</span> TELEGRAM
-      </a>
-      <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="retro-btn btn-steam">
-        <span class="btn-icon">🎮</span> STEAM
-      </a>
-      <a href="https://www.youtube.com/@Toride-shi" target="_blank" class="retro-btn btn-youtube">
-        <span class="btn-icon">▶</span> YOUTUBE
-      </a>
-      <a href="https://vk.com/toridevk" target="_blank" class="retro-btn btn-vk">
-        <span class="btn-icon">💬</span> VKONTAKTE
-      </a>
-    </div>
-
-    <div class="footer">
-      © 2026 TORIDE SHI<br>
-      PRESS START TO CONNECT <span class="blink">▮</span>
-    </div>
+    <div class="copyright">© 2026</div>
   </div>
 
   <script>
-    // Add subtle CRT flicker variation
+    // Subtle CRT flicker
     document.addEventListener('DOMContentLoaded', () => {
-      const screen = document.querySelector('.crt-screen');
+      const card = document.querySelector('.card');
       setInterval(() => {
-        if (Math.random() > 0.95) {
-          screen.style.opacity = 0.97;
-          setTimeout(() => screen.style.opacity = 1, 50);
+        if (Math.random() > 0.97) {
+          card.style.opacity = 0.96;
+          setTimeout(() => card.style.opacity = 1, 40);
         }
-      }, 200);
+      }, 150);
     });
   </script>
 </body>

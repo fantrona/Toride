@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Учебная часть — Toride Shi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#150f24; --card:#1d142b; --text:#e2c8ff; --text-dim:rgba(226,200,255,0.35); --border:#c9a2ff; --accent:#b388ff; --scan:rgba(40,20,60,0.22); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); font-family:'Press Start 2P',cursive; color:var(--text); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; image-rendering:pixelated; line-height:1.5; overflow-x:hidden; }
+    body::before { content:""; position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent,transparent 1px,var(--scan) 1px,var(--scan) 2px); pointer-events:none; z-index:98; animation:scan 12s linear infinite; }
+    @keyframes scan { 0%{background-position:0 0} 100%{background-position:0 100vh} }
+    #bg-particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+    .page { background:var(--card); border:3px solid var(--border); padding:30px 25px; max-width:460px; width:100%; position:relative; z-index:10; box-shadow:0 0 24px rgba(201,162,255,0.15); }
+    .title { text-align:center; font-size:0.9rem; margin-bottom:24px; color:var(--accent); text-shadow:0 0 6px rgba(179,136,255,0.4); }
+    .subject-list { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+    .subject-btn { display:block; padding:14px 16px; background:#241a35; border:2px solid var(--border); color:var(--text); text-decoration:none; font-size:0.6rem; text-align:center; text-transform:uppercase; letter-spacing:0.5px; transition:all 0.1s steps(2); cursor:pointer; }
+    .subject-btn:hover { background:var(--border); color:var(--bg); transform:translate(2px,2px); }
+    .subject-btn:active { transform:translate(4px,4px); }
+    .subject-btn .date { display:block; font-size:0.5rem; color:var(--text-dim); margin-top:4px; text-transform:none; letter-spacing:0; }
+    .back-link { display:block; text-align:center; padding:11px 14px; background:#241a35; border:2px solid var(--border); color:var(--text); text-decoration:none; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.5px; transition:all 0.1s steps(2); cursor:pointer; max-width:300px; margin:0 auto; }
+    .back-link:hover { background:var(--border); color:var(--bg); transform:translate(2px,2px); }
+    .footer { text-align:center; font-size:0.5rem; color:var(--text-dim); padding-top:14px; border-top:1px solid var(--text-dim); margin-top:20px; }
+    @media (prefers-reduced-motion:no-preference) { .page { animation:flicker 0.25s infinite; } @keyframes flicker { 0%,100%{opacity:1} 96%{opacity:0.97} 98%{opacity:1} } }
+    @media (max-width:420px) { .page { padding:25px 20px; } .title { font-size:0.8rem; } .subject-btn { font-size:0.55rem; padding:12px 14px; } }
+  </style>
+</head>
+<body>
+  <canvas id="bg-particles"></canvas>
+  <div class="page">
+    <div class="title">УЧЕБНАЯ ЧАСТЬ</div>
+    <div class="subject-list">
+      <a href="notes-implementation.html" class="subject-btn">
+        Внедрение ИС
+        <span class="date">5 конспектов</span>
+      </a>
+      <!-- Сюда можно добавлять новые предметы -->
+      <a href="#" class="subject-btn" style="opacity:0.5;cursor:not-allowed;" onclick="return false;">
+        Скоро
+        <span class="date">—</span>
+      </a>
+    </div>
+    <a href="index.html" class="back-link">НАЗАД</a>
+    <div class="footer">© 2026</div>
+  </div>
+  <script>
+    const bgCanvas=document.getElementById('bg-particles'),bgCtx=bgCanvas.getContext('2d'),bgPixels=[];
+    function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
+    window.addEventListener('resize',resizeBg);resizeBg();
+    class BgPixel{constructor(){this.reset()}reset(){const side=Math.random()>0.5?0:1,margin=bgCanvas.width*0.35;this.x=side===0?Math.random()*margin:bgCanvas.width-Math.random()*margin;this.y=bgCanvas.height+Math.random()*80;this.size=Math.floor(Math.random()*5)+2;this.speedY=Math.random()*0.6+0.2;this.speedX=(Math.random()-0.5)*0.6;this.alpha=Math.random()*0.65+0.15;this.fadeRate=Math.random()*0.003+0.001}update(){this.y-=this.speedY;this.x+=this.speedX;this.alpha-=this.fadeRate;if(this.alpha<=0||this.y<-10)this.reset()}draw(){bgCtx.fillStyle=`rgba(179,136,255,${this.alpha})`;bgCtx.fillRect(Math.floor(this.x),Math.floor(this.y),this.size,this.size);if(this.size>4){bgCtx.shadowBlur=8;bgCtx.shadowColor=`rgba(201,162,255,${this.alpha*0.5})`;bgCtx.fillRect(Math.floor(this.x),Math.floor(this.y),1,1);bgCtx.shadowBlur=0}}}
+    for(let i=0;i<200;i++)bgPixels.push(new BgPixel());
+    function bgLoop(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);bgPixels.forEach(p=>{p.update();p.draw()});requestAnimationFrame(bgLoop)}
+    bgLoop();
+  </script>
+</body>
+</html>

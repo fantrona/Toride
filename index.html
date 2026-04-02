@@ -29,9 +29,10 @@
       padding: 20px;
       image-rendering: pixelated;
       line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    /* CRT scanlines with purple tint */
+    /* CRT scanlines */
     body::before {
       content: "";
       position: fixed;
@@ -44,13 +45,21 @@
         var(--scan) 2px
       );
       pointer-events: none;
-      z-index: 100;
+      z-index: 99;
       animation: scan 12s linear infinite;
     }
 
     @keyframes scan {
       0% { background-position: 0 0; }
       100% { background-position: 0 100vh; }
+    }
+
+    /* Floating side pixels background */
+    #bg-particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .page {
@@ -183,7 +192,7 @@
       font-size: 0.45rem;
       color: var(--text-dim);
       margin-top: 10px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     /* Footer */
@@ -216,6 +225,9 @@
   </style>
 </head>
 <body>
+  <!-- Background Particles -->
+  <canvas id="bg-particles"></canvas>
+
   <div class="page">
     
     <!-- Avatar -->
@@ -270,14 +282,14 @@
          ||            ||
          \/            |/</code></pre>
 
-    <!-- Pong Game Toggle -->
-    <button id="pong-toggle" class="link" style="max-width: 300px; margin: 0 auto 10px;">🕹️ ЗАПУСТИТЬ PONG</button>
+    <!-- Pong Toggle -->
+    <button id="pong-toggle" class="link" style="max-width: 300px; margin: 0 auto 10px;">ЗАПУСТИТЬ PONG</button>
     
     <!-- Pong Container -->
     <div id="pong-wrapper">
       <canvas id="pong-canvas" width="350" height="250"></canvas>
       <div class="pong-controls">
-        W / S или ↑ / ↓ : Движение<br>
+        W / S или Стрелки : Движение<br>
         ПРОБЕЛ : Пауза
       </div>
     </div>
@@ -287,7 +299,54 @@
   </div>
 
   <script>
-    // --- PONG ENGINE ---
+    // ================= BACKGROUND PARTICLES =================
+    const bgCanvas = document.getElementById('bg-particles');
+    const bgCtx = bgCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeBg() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    class Pixel {
+      constructor() { this.reset(); }
+      reset() {
+        // Спавн преимущественно по краям (левые 15% и правые 15%)
+        const side = Math.random() > 0.5 ? 0 : 1;
+        const margin = bgCanvas.width * 0.15;
+        this.x = side === 0 ? Math.random() * margin : bgCanvas.width - Math.random() * margin;
+        this.y = bgCanvas.height + Math.random() * 100;
+        this.size = Math.floor(Math.random() * 4) + 2;
+        this.speedY = Math.random() * 0.7 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3; // Лёгкое покачивание к центру
+        this.alpha = Math.random() * 0.4 + 0.2;
+        this.fadeRate = Math.random() * 0.004 + 0.002;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        this.alpha -= this.fadeRate;
+        if (this.alpha <= 0 || this.y < -10) this.reset();
+      }
+      draw() {
+        bgCtx.fillStyle = `rgba(179, 136, 255, ${this.alpha})`;
+        bgCtx.fillRect(Math.floor(this.x), Math.floor(this.y), this.size, this.size);
+      }
+    }
+
+    for (let i = 0; i < 80; i++) particles.push(new Pixel());
+
+    function bgLoop() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(bgLoop);
+    }
+    bgLoop();
+
+    // ================= PONG ENGINE =================
     const canvas = document.getElementById('pong-canvas');
     const ctx = canvas.getContext('2d');
     const toggleBtn = document.getElementById('pong-toggle');
@@ -296,8 +355,10 @@
     let gameRunning = false;
     let animFrameId = null;
 
-    // Game objects
     const paddleW = 8, paddleH = 50, ballSize = 8;
+    const playerX = 10;
+    const aiX = canvas.width - paddleW - 10;
+    
     let playerY = canvas.height/2 - paddleH/2;
     let aiY = canvas.height/2 - paddleH/2;
     let ballX = canvas.width/2 - ballSize/2;
@@ -307,8 +368,8 @@
     let playerScore = 0;
     let aiScore = 0;
     let paused = false;
+    const maxSpeed = 9;
 
-    // Input
     const keys = {};
     window.addEventListener('keydown', e => {
       keys[e.key] = true;
@@ -319,26 +380,25 @@
     });
     window.addEventListener('keyup', e => keys[e.key] = false);
 
-    // Mouse control (optional, fallback)
+    // Mouse fallback
     canvas.addEventListener('mousemove', e => {
       const rect = canvas.getBoundingClientRect();
       const scaleY = canvas.height / rect.height;
       playerY = (e.clientY - rect.top) * scaleY - paddleH/2;
     });
 
-    // Toggle Game
     toggleBtn.addEventListener('click', () => {
       if (gameRunning) {
         gameRunning = false;
         paused = false;
         cancelAnimationFrame(animFrameId);
         pongWrapper.style.display = 'none';
-        toggleBtn.textContent = '🕹️ ЗАПУСТИТЬ PONG';
+        toggleBtn.textContent = 'ЗАПУСТИТЬ PONG';
         resetGame();
       } else {
         gameRunning = true;
         pongWrapper.style.display = 'block';
-        toggleBtn.textContent = '⏹ ЗАКРЫТЬ PONG';
+        toggleBtn.textContent = 'ОСТАНОВИТЬ';
         resetGame();
         loop();
       }
@@ -350,18 +410,7 @@
       ballSpeedX = 3 * (Math.random() > 0.5 ? 1 : -1);
       ballSpeedY = 2 * (Math.random() > 0.5 ? 1 : -1);
       playerY = aiY = canvas.height/2 - paddleH/2;
-    }
-
-    function drawRect(x, y, w, h, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, w, h);
-    }
-
-    function drawText(text, x, y, size, color) {
-      ctx.font = `${size}px 'Press Start 2P', monospace`;
-      ctx.fillStyle = color;
-      ctx.textAlign = 'center';
-      ctx.fillText(text, x, y);
+      playerScore = aiScore = 0;
     }
 
     function update() {
@@ -373,10 +422,9 @@
       if (keys['s'] || keys['S'] || keys['ArrowDown']) playerY += speed;
       playerY = Math.max(0, Math.min(canvas.height - paddleH, playerY));
 
-      // AI movement
+      // AI smooth tracking
       const aiCenter = aiY + paddleH/2;
-      if (aiCenter < ballY - 10) aiY += 3.2;
-      else if (aiCenter > ballY + 10) aiY -= 3.2;
+      aiY += (ballY - aiCenter) * 0.09;
       aiY = Math.max(0, Math.min(canvas.height - paddleH, aiY));
 
       // Ball movement
@@ -384,21 +432,28 @@
       ballY += ballSpeedY;
 
       // Top/Bottom bounce
-      if (ballY <= 0 || ballY + ballSize >= canvas.height) ballSpeedY *= -1;
+      if (ballY <= 0) { ballY = 0; ballSpeedY = Math.abs(ballSpeedY); }
+      if (ballY + ballSize >= canvas.height) { ballY = canvas.height - ballSize; ballSpeedY = -Math.abs(ballSpeedY); }
 
-      // Paddle collisions
-      // Player (right side)
-      if (ballX + ballSize >= canvas.width - 20 && 
+      // --- COLLISION FIX ---
+      // Player (Left)
+      if (ballX <= playerX + paddleW && ballX + ballSize >= playerX &&
           ballY + ballSize >= playerY && ballY <= playerY + paddleH) {
-        ballSpeedX = -Math.abs(ballSpeedX * 1.05);
-        ballSpeedY += (Math.random() - 0.5) * 2;
+          let hitPos = (ballY - playerY) / paddleH;
+          ballSpeedX = Math.abs(ballSpeedX) * 1.05;
+          ballSpeedY = (hitPos - 0.5) * 6;
       }
-      // AI (left side)
-      if (ballX <= 20 && 
+      // AI (Right)
+      if (ballX + ballSize >= aiX && ballX <= aiX + paddleW &&
           ballY + ballSize >= aiY && ballY <= aiY + paddleH) {
-        ballSpeedX = Math.abs(ballSpeedX * 1.05);
-        ballSpeedY += (Math.random() - 0.5) * 2;
+          let hitPos = (ballY - aiY) / paddleH;
+          ballSpeedX = -Math.abs(ballSpeedX) * 1.05;
+          ballSpeedY = (hitPos - 0.5) * 6;
       }
+
+      // Speed cap
+      if (Math.abs(ballSpeedX) > maxSpeed) ballSpeedX = maxSpeed * Math.sign(ballSpeedX);
+      if (Math.abs(ballSpeedY) > maxSpeed) ballSpeedY = maxSpeed * Math.sign(ballSpeedY);
 
       // Scoring
       if (ballX < 0) { aiScore++; resetBall(); }
@@ -408,12 +463,11 @@
     function resetBall() {
       ballX = canvas.width/2 - ballSize/2;
       ballY = canvas.height/2 - ballSize/2;
-      ballSpeedX = 3 * (ballSpeedX > 0 ? 1 : -1);
+      ballSpeedX = 3 * (Math.random() > 0.5 ? 1 : -1);
       ballSpeedY = 2 * (Math.random() > 0.5 ? 1 : -1);
     }
 
     function draw() {
-      // Clear
       ctx.fillStyle = '#0d0716';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -428,18 +482,26 @@
       ctx.setLineDash([]);
 
       // Paddles & Ball
-      drawRect(20, playerY, paddleW, paddleH, '#e2c8ff'); // Player (right)
-      drawRect(canvas.width - 28, aiY, paddleW, paddleH, '#b388ff'); // AI (left)
-      drawRect(ballX, ballY, ballSize, ballSize, '#fff');
+      ctx.fillStyle = '#e2c8ff';
+      ctx.fillRect(playerX, playerY, paddleW, paddleH);
+      ctx.fillStyle = '#b388ff';
+      ctx.fillRect(aiX, aiY, paddleW, paddleH);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(ballX, ballY, ballSize, ballSize);
 
       // Score
-      drawText(playerScore, canvas.width/2 + 40, 30, 16, '#e2c8ff');
-      drawText(aiScore, canvas.width/2 - 40, 30, 16, '#b388ff');
+      ctx.font = "16px 'Press Start 2P', monospace";
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#e2c8ff';
+      ctx.fillText(playerScore, canvas.width/2 + 40, 30);
+      ctx.fillStyle = '#b388ff';
+      ctx.fillText(aiScore, canvas.width/2 - 40, 30);
 
       if (paused) {
-        ctx.fillStyle = 'rgba(13, 7, 22, 0.7)';
+        ctx.fillStyle = 'rgba(13, 7, 22, 0.75)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawText('ПАУЗА', canvas.width/2, canvas.height/2 + 6, 14, '#e2c8ff');
+        ctx.fillStyle = '#e2c8ff';
+        ctx.fillText('ПАУЗА', canvas.width/2, canvas.height/2 + 6);
       }
     }
 

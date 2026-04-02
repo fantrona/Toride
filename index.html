@@ -138,21 +138,26 @@
     .link:nth-child(3):hover { background: #ff0000; }
     .link:nth-child(4):hover { background: #0077ff; }
 
-    /* ASCII Art Block */
+    /* ASCII Art Block — STRICT monospace formatting */
     .ascii-art {
-      font-family: 'Courier New', monospace;
+      font-family: 'Courier New', Courier, monospace;
+      font-variant-ligatures: none; /* Отключает "слипание" символов в современных шрифтах */
+      tab-size: 1;
       font-size: 0.45rem;
-      line-height: 1.1;
+      line-height: 1.12;
       color: var(--text);
       text-align: center;
       white-space: pre;
-      padding: 16px 10px;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      padding: 18px 12px;
       margin: 20px 0 14px;
       border: 2px dashed var(--text-dim);
       background: rgba(0, 255, 157, 0.03);
       text-shadow: 0 0 4px var(--text);
       overflow-x: auto;
       letter-spacing: 0;
+      font-weight: 400;
     }
 
     /* Footer */
@@ -182,7 +187,7 @@
       .name { font-size: 0.85rem; }
       .desc { font-size: 0.5rem; }
       .link { font-size: 0.55rem; padding: 10px 12px; }
-      .ascii-art { font-size: 0.38rem; padding: 12px 8px; }
+      .ascii-art { font-size: 0.38rem; padding: 14px 10px; }
     }
   </style>
 </head>
@@ -215,8 +220,8 @@
       <a href="https://vk.com/toridevk" target="_blank" class="link">VK</a>
     </div>
 
-    <!-- ASCII Art -->
-    <pre class="ascii-art">         .-"-.
+    <!-- ASCII Art (Strictly formatted as code) -->
+    <pre class="ascii-art"><code>         .-"-.
          /  |  \
         |    |  |
        |     |   |
@@ -239,7 +244,7 @@
          ||            ||
          ||            ||
          ||            ||
-         \/            |/</pre>
+         \/            |/</code></pre>
 
     <!-- Footer -->
     <div class="footer">© 2026</div>

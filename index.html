@@ -6,44 +6,29 @@
   <title>Toride Shi</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #150f24; --card: #1d142b; --text: #e2c8ff; --text-dim: rgba(226, 200, 255, 0.35);
-      --border: #c9a2ff; --accent: #b388ff; --scan: rgba(40, 20, 60, 0.22);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg); font-family: 'Press Start 2P', cursive; color: var(--text);
-      min-height: 100vh; display: flex; justify-content: center; align-items: center;
-      padding: 20px; image-rendering: pixelated; line-height: 1.5; overflow-x: hidden;
-    }
-    body::before {
-      content: ""; position: fixed; inset: 0;
-      background: repeating-linear-gradient(to bottom, transparent, transparent 1px, var(--scan) 1px, var(--scan) 2px);
-      pointer-events: none; z-index: 98; animation: scan 12s linear infinite;
-    }
-    @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 0 100vh; } }
-    #bg-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .page {
-      background: var(--card); border: 3px solid var(--border); padding: 30px 25px;
-      max-width: 460px; width: 100%; position: relative; z-index: 10;
-      box-shadow: 0 0 24px rgba(201, 162, 255, 0.15);
-    }
-    .avatar-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
-    .avatar { width: 130px; height: 130px; border: 3px solid var(--border); image-rendering: pixelated; object-fit: cover; background: #0a0512; }
-    .name { text-align: center; font-size: 0.95rem; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 2px solid var(--text-dim); letter-spacing: 1px; color: var(--accent); text-shadow: 0 0 6px rgba(179, 136, 255, 0.4); }
-    .desc { font-size: 0.55rem; color: var(--text); opacity: 0.85; text-align: center; margin-bottom: 28px; line-height: 1.7; }
-    .links { display: flex; flex-direction: column; gap: 11px; margin-bottom: 22px; }
-    .link { display: block; padding: 11px 14px; background: #241a35; border: 2px solid var(--border); color: var(--text); text-decoration: none; font-size: 0.6rem; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.1s steps(2); cursor: pointer; }
-    .link:hover { background: var(--border); color: var(--bg); transform: translate(2px, 2px); }
-    .link:active { transform: translate(4px, 4px); }
-    .link:nth-child(1):hover { background: #0088cc; color: #fff; }
-    .link:nth-child(2):hover { background: #66c0f4; color: #1a1a1a; }
-    .link:nth-child(3):hover { background: #ff0000; color: #fff; }
-    .link:nth-child(4):hover { background: #0077ff; color: #fff; }
-    .ascii-art { font-family: 'Courier New', Courier, monospace; font-variant-ligatures: none; tab-size: 1; font-size: 0.45rem; line-height: 1.12; color: var(--text); text-align: center; white-space: pre; word-break: keep-all; overflow-wrap: normal; padding: 18px 12px; margin: 20px 0 14px; border: 2px dashed var(--text-dim); background: rgba(201, 162, 255, 0.04); text-shadow: 0 0 4px var(--accent); overflow-x: auto; letter-spacing: 0; font-weight: 400; }
-    .footer { text-align: center; font-size: 0.5rem; color: var(--text-dim); padding-top: 14px; border-top: 1px solid var(--text-dim); }
-    @media (prefers-reduced-motion: no-preference) { .page { animation: flicker 0.25s infinite; } @keyframes flicker { 0%, 100% { opacity: 1; } 96% { opacity: 0.97; } 98% { opacity: 1; } } }
-    @media (max-width: 420px) { .page { padding: 25px 20px; } .avatar { width: 115px; height: 115px; } .name { font-size: 0.85rem; } .desc { font-size: 0.5rem; } .link { font-size: 0.55rem; padding: 10px 12px; } .ascii-art { font-size: 0.38rem; padding: 14px 10px; } }
+    :root { --bg:#150f24; --card:#1d142b; --text:#e2c8ff; --text-dim:rgba(226,200,255,0.35); --border:#c9a2ff; --accent:#b388ff; --scan:rgba(40,20,60,0.22); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); font-family:'Press Start 2P',cursive; color:var(--text); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; image-rendering:pixelated; line-height:1.5; overflow-x:hidden; }
+    body::before { content:""; position:fixed; inset:0; background:repeating-linear-gradient(to bottom,transparent,transparent 1px,var(--scan) 1px,var(--scan) 2px); pointer-events:none; z-index:98; animation:scan 12s linear infinite; }
+    @keyframes scan { 0%{background-position:0 0} 100%{background-position:0 100vh} }
+    #bg-particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+    .page { background:var(--card); border:3px solid var(--border); padding:30px 25px; max-width:460px; width:100%; position:relative; z-index:10; box-shadow:0 0 24px rgba(201,162,255,0.15); }
+    .avatar-wrap { display:flex; justify-content:center; margin-bottom:20px; }
+    .avatar { width:130px; height:130px; border:3px solid var(--border); image-rendering:pixelated; object-fit:cover; background:#0a0512; }
+    .name { text-align:center; font-size:0.95rem; margin-bottom:18px; padding-bottom:16px; border-bottom:2px solid var(--text-dim); letter-spacing:1px; color:var(--accent); text-shadow:0 0 6px rgba(179,136,255,0.4); }
+    .desc { font-size:0.55rem; color:var(--text); opacity:0.85; text-align:center; margin-bottom:28px; line-height:1.7; }
+    .links { display:flex; flex-direction:column; gap:11px; margin-bottom:22px; }
+    .link { display:block; padding:11px 14px; background:#241a35; border:2px solid var(--border); color:var(--text); text-decoration:none; font-size:0.6rem; text-align:center; text-transform:uppercase; letter-spacing:0.5px; transition:all 0.1s steps(2); cursor:pointer; }
+    .link:hover { background:var(--border); color:var(--bg); transform:translate(2px,2px); }
+    .link:active { transform:translate(4px,4px); }
+    .link:nth-child(1):hover { background:#0088cc; color:#fff; }
+    .link:nth-child(2):hover { background:#66c0f4; color:#1a1a1a; }
+    .link:nth-child(3):hover { background:#ff0000; color:#fff; }
+    .link:nth-child(4):hover { background:#0077ff; color:#fff; }
+    .ascii-art { font-family:'Courier New',Courier,monospace; font-variant-ligatures:none; tab-size:1; font-size:0.45rem; line-height:1.12; color:var(--text); text-align:center; white-space:pre; word-break:keep-all; overflow-wrap:normal; padding:18px 12px; margin:20px 0 14px; border:2px dashed var(--text-dim); background:rgba(201,162,255,0.04); text-shadow:0 0 4px var(--accent); overflow-x:auto; letter-spacing:0; font-weight:400; }
+    .footer { text-align:center; font-size:0.5rem; color:var(--text-dim); padding-top:14px; border-top:1px solid var(--text-dim); }
+    @media (prefers-reduced-motion:no-preference) { .page { animation:flicker 0.25s infinite; } @keyframes flicker { 0%,100%{opacity:1} 96%{opacity:0.97} 98%{opacity:1} } }
+    @media (max-width:420px) { .page { padding:25px 20px; } .avatar { width:115px; height:115px; } .name { font-size:0.85rem; } .desc { font-size:0.5rem; } .link { font-size:0.55rem; padding:10px 12px; } .ascii-art { font-size:0.38rem; padding:14px 10px; } }
   </style>
 </head>
 <body>
@@ -84,38 +69,17 @@
          ||            ||
          ||            ||
          \/            |/</code></pre>
-    <a href="pong.html" class="link" style="max-width: 300px; margin: 0 auto 10px; display: block;">ЗАПУСТИТЬ PONG</a>
+    <a href="pong.html" class="link" style="max-width:300px;margin:0 auto 10px;display:block;">ЗАПУСТИТЬ PONG</a>
+    <a href="study.html" class="link" style="max-width:300px;margin:0 auto;display:block;">УЧЕБНАЯ ЧАСТЬ</a>
     <div class="footer">© 2026</div>
   </div>
-
   <script>
-    const bgCanvas = document.getElementById('bg-particles');
-    const bgCtx = bgCanvas.getContext('2d');
-    let bgPixels = [];
-    function resizeBg() { bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeBg); resizeBg();
-    class BgPixel {
-      constructor() { this.reset(); }
-      reset() {
-        const side = Math.random() > 0.5 ? 0 : 1;
-        const margin = bgCanvas.width * 0.35;
-        this.x = side === 0 ? Math.random() * margin : bgCanvas.width - Math.random() * margin;
-        this.y = bgCanvas.height + Math.random() * 80;
-        this.size = Math.floor(Math.random() * 5) + 2;
-        this.speedY = Math.random() * 0.6 + 0.2;
-        this.speedX = (Math.random() - 0.5) * 0.6;
-        this.alpha = Math.random() * 0.65 + 0.15;
-        this.fadeRate = Math.random() * 0.003 + 0.001;
-      }
-      update() { this.y -= this.speedY; this.x += this.speedX; this.alpha -= this.fadeRate; if (this.alpha <= 0 || this.y < -10) this.reset(); }
-      draw() {
-        bgCtx.fillStyle = `rgba(179, 136, 255, ${this.alpha})`;
-        bgCtx.fillRect(Math.floor(this.x), Math.floor(this.y), this.size, this.size);
-        if (this.size > 4) { bgCtx.shadowBlur = 8; bgCtx.shadowColor = `rgba(201, 162, 255, ${this.alpha * 0.5})`; bgCtx.fillRect(Math.floor(this.x), Math.floor(this.y), 1, 1); bgCtx.shadowBlur = 0; }
-      }
-    }
-    for (let i = 0; i < 200; i++) bgPixels.push(new BgPixel());
-    function bgLoop() { bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height); bgPixels.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(bgLoop); }
+    const bgCanvas=document.getElementById('bg-particles'),bgCtx=bgCanvas.getContext('2d'),bgPixels=[];
+    function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
+    window.addEventListener('resize',resizeBg);resizeBg();
+    class BgPixel{constructor(){this.reset()}reset(){const side=Math.random()>0.5?0:1,margin=bgCanvas.width*0.35;this.x=side===0?Math.random()*margin:bgCanvas.width-Math.random()*margin;this.y=bgCanvas.height+Math.random()*80;this.size=Math.floor(Math.random()*5)+2;this.speedY=Math.random()*0.6+0.2;this.speedX=(Math.random()-0.5)*0.6;this.alpha=Math.random()*0.65+0.15;this.fadeRate=Math.random()*0.003+0.001}update(){this.y-=this.speedY;this.x+=this.speedX;this.alpha-=this.fadeRate;if(this.alpha<=0||this.y<-10)this.reset()}draw(){bgCtx.fillStyle=`rgba(179,136,255,${this.alpha})`;bgCtx.fillRect(Math.floor(this.x),Math.floor(this.y),this.size,this.size);if(this.size>4){bgCtx.shadowBlur=8;bgCtx.shadowColor=`rgba(201,162,255,${this.alpha*0.5})`;bgCtx.fillRect(Math.floor(this.x),Math.floor(this.y),1,1);bgCtx.shadowBlur=0}}}
+    for(let i=0;i<200;i++)bgPixels.push(new BgPixel());
+    function bgLoop(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);bgPixels.forEach(p=>{p.update();p.draw()});requestAnimationFrame(bgLoop)}
     bgLoop();
   </script>
 </body>

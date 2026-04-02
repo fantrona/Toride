@@ -45,7 +45,7 @@
         var(--scan) 2px
       );
       pointer-events: none;
-      z-index: 99;
+      z-index: 98;
       animation: scan 12s linear infinite;
     }
 
@@ -54,7 +54,7 @@
       100% { background-position: 0 100vh; }
     }
 
-    /* Floating side pixels background */
+    /* Background floating pixels */
     #bg-particles {
       position: fixed;
       inset: 0;
@@ -73,7 +73,6 @@
       box-shadow: 0 0 24px rgba(201, 162, 255, 0.15);
     }
 
-    /* Avatar */
     .avatar-wrap {
       display: flex;
       justify-content: center;
@@ -89,7 +88,6 @@
       background: #0a0512;
     }
 
-    /* Name */
     .name {
       text-align: center;
       font-size: 0.95rem;
@@ -101,7 +99,6 @@
       text-shadow: 0 0 6px rgba(179, 136, 255, 0.4);
     }
 
-    /* Description */
     .desc {
       font-size: 0.55rem;
       color: var(--text);
@@ -111,7 +108,6 @@
       line-height: 1.7;
     }
 
-    /* Links */
     .links {
       display: flex;
       flex-direction: column;
@@ -144,13 +140,11 @@
       transform: translate(4px, 4px);
     }
 
-    /* Platform hover accents */
     .link:nth-child(1):hover { background: #0088cc; color: #fff; }
     .link:nth-child(2):hover { background: #66c0f4; color: #1a1a1a; }
     .link:nth-child(3):hover { background: #ff0000; color: #fff; }
     .link:nth-child(4):hover { background: #0077ff; color: #fff; }
 
-    /* ASCII Art Block */
     .ascii-art {
       font-family: 'Courier New', Courier, monospace;
       font-variant-ligatures: none;
@@ -172,7 +166,7 @@
       font-weight: 400;
     }
 
-    /* PONG SECTION */
+    /* PONG */
     #pong-wrapper {
       display: none;
       margin: 24px 0 14px;
@@ -195,7 +189,6 @@
       line-height: 1.5;
     }
 
-    /* Footer */
     .footer {
       text-align: center;
       font-size: 0.5rem;
@@ -204,7 +197,6 @@
       border-top: 1px solid var(--text-dim);
     }
 
-    /* Subtle flicker */
     @media (prefers-reduced-motion: no-preference) {
       .page { animation: flicker 0.25s infinite; }
       @keyframes flicker {
@@ -225,12 +217,9 @@
   </style>
 </head>
 <body>
-  <!-- Background Particles -->
   <canvas id="bg-particles"></canvas>
 
   <div class="page">
-    
-    <!-- Avatar -->
     <div class="avatar-wrap">
       <img 
         src="https://media.discordapp.net/attachments/1168576216006131712/1489030892826656940/image.png?ex=69ceef95&is=69cd9e15&hm=c5171f18fcae86cccd4a845ef992282a0a414bc9068d9eeab22697dbd1ce5867&=&format=webp&quality=lossless&width=554&height=611" 
@@ -239,16 +228,13 @@
       />
     </div>
 
-    <!-- Name -->
     <div class="name">TORIDE SHI</div>
 
-    <!-- Description -->
     <div class="desc">
       Что вроде личного всякого,<br>
       а снизу всякое важное возможно.
     </div>
 
-    <!-- Links -->
     <div class="links">
       <a href="https://www.t.me/TorideShi" target="_blank" class="link">Telegram</a>
       <a href="https://steamcommunity.com/id/Torideshi/" target="_blank" class="link">Steam</a>
@@ -256,7 +242,6 @@
       <a href="https://vk.com/toridevk" target="_blank" class="link">VK</a>
     </div>
 
-    <!-- ASCII Art -->
     <pre class="ascii-art"><code>         .-"-.
          /  |  \
         |    |  |
@@ -282,10 +267,8 @@
          ||            ||
          \/            |/</code></pre>
 
-    <!-- Pong Toggle -->
     <button id="pong-toggle" class="link" style="max-width: 300px; margin: 0 auto 10px;">ЗАПУСТИТЬ PONG</button>
     
-    <!-- Pong Container -->
     <div id="pong-wrapper">
       <canvas id="pong-canvas" width="350" height="250"></canvas>
       <div class="pong-controls">
@@ -294,15 +277,14 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">© 2026</div>
   </div>
 
   <script>
-    // ================= BACKGROUND PARTICLES =================
+    /* ================= BACKGROUND PARTICLES ================= */
     const bgCanvas = document.getElementById('bg-particles');
     const bgCtx = bgCanvas.getContext('2d');
-    let particles = [];
+    let bgPixels = [];
 
     function resizeBg() {
       bgCanvas.width = window.innerWidth;
@@ -311,19 +293,18 @@
     window.addEventListener('resize', resizeBg);
     resizeBg();
 
-    class Pixel {
+    class BgPixel {
       constructor() { this.reset(); }
       reset() {
-        // Спавн преимущественно по краям (левые 15% и правые 15%)
         const side = Math.random() > 0.5 ? 0 : 1;
-        const margin = bgCanvas.width * 0.15;
+        const margin = bgCanvas.width * 0.35; // Шире область
         this.x = side === 0 ? Math.random() * margin : bgCanvas.width - Math.random() * margin;
-        this.y = bgCanvas.height + Math.random() * 100;
-        this.size = Math.floor(Math.random() * 4) + 2;
-        this.speedY = Math.random() * 0.7 + 0.3;
-        this.speedX = (Math.random() - 0.5) * 0.3; // Лёгкое покачивание к центру
-        this.alpha = Math.random() * 0.4 + 0.2;
-        this.fadeRate = Math.random() * 0.004 + 0.002;
+        this.y = bgCanvas.height + Math.random() * 80;
+        this.size = Math.floor(Math.random() * 5) + 2;
+        this.speedY = Math.random() * 0.6 + 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.6;
+        this.alpha = Math.random() * 0.65 + 0.15;
+        this.fadeRate = Math.random() * 0.003 + 0.001;
       }
       update() {
         this.y -= this.speedY;
@@ -334,19 +315,26 @@
       draw() {
         bgCtx.fillStyle = `rgba(179, 136, 255, ${this.alpha})`;
         bgCtx.fillRect(Math.floor(this.x), Math.floor(this.y), this.size, this.size);
+        // Лёгкое свечение вокруг крупных пикселей
+        if (this.size > 4) {
+          bgCtx.shadowBlur = 8;
+          bgCtx.shadowColor = `rgba(201, 162, 255, ${this.alpha * 0.5})`;
+          bgCtx.fillRect(Math.floor(this.x), Math.floor(this.y), 1, 1);
+          bgCtx.shadowBlur = 0;
+        }
       }
     }
 
-    for (let i = 0; i < 80; i++) particles.push(new Pixel());
+    for (let i = 0; i < 200; i++) bgPixels.push(new BgPixel());
 
     function bgLoop() {
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
+      bgPixels.forEach(p => { p.update(); p.draw(); });
       requestAnimationFrame(bgLoop);
     }
     bgLoop();
 
-    // ================= PONG ENGINE =================
+    /* ================= PONG ENGINE ================= */
     const canvas = document.getElementById('pong-canvas');
     const ctx = canvas.getContext('2d');
     const toggleBtn = document.getElementById('pong-toggle');
@@ -370,6 +358,57 @@
     let paused = false;
     const maxSpeed = 9;
 
+    // Effects system
+    let pongEffects = [];
+    let scoreFlash = 0;
+
+    function spawnEffect(x, y, type, count = 15) {
+      const colors = {
+        miss: ['#ff9ebb', '#ff7a93', '#c9a2ff', '#ffffff'],
+        paddle: ['#e2c8ff', '#b388ff', '#ffffff', '#d6a8ff'],
+        wall: ['#b388ff', '#8a66cc', '#c9a2ff']
+      };
+      const palette = colors[type] || colors.wall;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1;
+        pongEffects.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1.0,
+          decay: Math.random() * 0.035 + 0.02,
+          size: Math.random() * 3 + 1,
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      }
+    }
+
+    function updateEffects() {
+      for (let i = pongEffects.length - 1; i >= 0; i--) {
+        const p = pongEffects[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) pongEffects.splice(i, 1);
+      }
+      if (scoreFlash > 0) scoreFlash -= 0.05;
+    }
+
+    function drawEffects() {
+      pongEffects.forEach(p => {
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+      ctx.globalAlpha = 1;
+
+      if (scoreFlash > 0) {
+        ctx.fillStyle = `rgba(201, 162, 255, ${scoreFlash * 0.3})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
     const keys = {};
     window.addEventListener('keydown', e => {
       keys[e.key] = true;
@@ -380,7 +419,6 @@
     });
     window.addEventListener('keyup', e => keys[e.key] = false);
 
-    // Mouse fallback
     canvas.addEventListener('mousemove', e => {
       const rect = canvas.getBoundingClientRect();
       const scaleY = canvas.height / rect.height;
@@ -411,53 +449,70 @@
       ballSpeedY = 2 * (Math.random() > 0.5 ? 1 : -1);
       playerY = aiY = canvas.height/2 - paddleH/2;
       playerScore = aiScore = 0;
+      pongEffects = [];
+      scoreFlash = 0;
     }
 
     function update() {
       if (paused) return;
 
-      // Player movement
       const speed = 5;
       if (keys['w'] || keys['W'] || keys['ArrowUp']) playerY -= speed;
       if (keys['s'] || keys['S'] || keys['ArrowDown']) playerY += speed;
       playerY = Math.max(0, Math.min(canvas.height - paddleH, playerY));
 
-      // AI smooth tracking
       const aiCenter = aiY + paddleH/2;
       aiY += (ballY - aiCenter) * 0.09;
       aiY = Math.max(0, Math.min(canvas.height - paddleH, aiY));
 
-      // Ball movement
       ballX += ballSpeedX;
       ballY += ballSpeedY;
 
-      // Top/Bottom bounce
-      if (ballY <= 0) { ballY = 0; ballSpeedY = Math.abs(ballSpeedY); }
-      if (ballY + ballSize >= canvas.height) { ballY = canvas.height - ballSize; ballSpeedY = -Math.abs(ballSpeedY); }
+      // Wall bounce
+      if (ballY <= 0) { 
+        ballY = 0; 
+        ballSpeedY = Math.abs(ballSpeedY); 
+        spawnEffect(ballX + ballSize/2, 0, 'wall', 8);
+      }
+      if (ballY + ballSize >= canvas.height) { 
+        ballY = canvas.height - ballSize; 
+        ballSpeedY = -Math.abs(ballSpeedY);
+        spawnEffect(ballX + ballSize/2, canvas.height, 'wall', 8);
+      }
 
-      // --- COLLISION FIX ---
-      // Player (Left)
+      // Player collision
       if (ballX <= playerX + paddleW && ballX + ballSize >= playerX &&
           ballY + ballSize >= playerY && ballY <= playerY + paddleH) {
-          let hitPos = (ballY - playerY) / paddleH;
+          const hitPos = (ballY - playerY) / paddleH;
           ballSpeedX = Math.abs(ballSpeedX) * 1.05;
           ballSpeedY = (hitPos - 0.5) * 6;
+          spawnEffect(ballX + ballSize, ballY + ballSize/2, 'paddle', 12);
       }
-      // AI (Right)
+      // AI collision
       if (ballX + ballSize >= aiX && ballX <= aiX + paddleW &&
           ballY + ballSize >= aiY && ballY <= aiY + paddleH) {
-          let hitPos = (ballY - aiY) / paddleH;
+          const hitPos = (ballY - aiY) / paddleH;
           ballSpeedX = -Math.abs(ballSpeedX) * 1.05;
           ballSpeedY = (hitPos - 0.5) * 6;
+          spawnEffect(ballX, ballY + ballSize/2, 'paddle', 12);
       }
 
-      // Speed cap
       if (Math.abs(ballSpeedX) > maxSpeed) ballSpeedX = maxSpeed * Math.sign(ballSpeedX);
       if (Math.abs(ballSpeedY) > maxSpeed) ballSpeedY = maxSpeed * Math.sign(ballSpeedY);
 
-      // Scoring
-      if (ballX < 0) { aiScore++; resetBall(); }
-      if (ballX > canvas.width) { playerScore++; resetBall(); }
+      // Scoring & Miss explosion
+      if (ballX < 0) { 
+        aiScore++; 
+        spawnEffect(ballX, ballY + ballSize/2, 'miss', 30);
+        scoreFlash = 1.0;
+        resetBall(); 
+      }
+      if (ballX > canvas.width) { 
+        playerScore++; 
+        spawnEffect(ballX, ballY + ballSize/2, 'miss', 30);
+        scoreFlash = 1.0;
+        resetBall(); 
+      }
     }
 
     function resetBall() {
@@ -471,7 +526,6 @@
       ctx.fillStyle = '#0d0716';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Center line
       ctx.setLineDash([4, 6]);
       ctx.beginPath();
       ctx.moveTo(canvas.width/2, 0);
@@ -481,7 +535,6 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Paddles & Ball
       ctx.fillStyle = '#e2c8ff';
       ctx.fillRect(playerX, playerY, paddleW, paddleH);
       ctx.fillStyle = '#b388ff';
@@ -489,13 +542,14 @@
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(ballX, ballY, ballSize, ballSize);
 
-      // Score
       ctx.font = "16px 'Press Start 2P', monospace";
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#e2c8ff';
+      ctx.fillStyle = scoreFlash > 0.5 ? '#ffffff' : '#e2c8ff';
       ctx.fillText(playerScore, canvas.width/2 + 40, 30);
       ctx.fillStyle = '#b388ff';
       ctx.fillText(aiScore, canvas.width/2 - 40, 30);
+
+      drawEffects();
 
       if (paused) {
         ctx.fillStyle = 'rgba(13, 7, 22, 0.75)';
@@ -508,6 +562,7 @@
     function loop() {
       if (!gameRunning || paused) return;
       update();
+      updateEffects();
       draw();
       animFrameId = requestAnimationFrame(loop);
     }
